@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TagFS</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+
+    <link href="../css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/reveal.css">
+    <script src="../js/bootstrap.js"></script>
+    <script src="../js/jquery.reveal.js"></script>
+    <script>
+        function savePortal(){
+            console.log($('#tag_selector_frame').contents().find('#js_frameFilter').attr("filter"));
+
+
+        }
+    </script>
+
+    <link href='http://fonts.googleapis.com/css?family=Italiana' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Marmelad&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <style>
+        body{
+            font-family: 'Marmelad', sans-serif;
+        }
+
+        .logonee{
+            font-family: 'Italiana', serif;
+            color: #ffffff;
+            text-decoration-color: #ffffff;
+        }
+        .fs_link {
+            text-decoration: none;
+            color: darkgray;
+
+
+        }
+        .fs_link:hover {
+            color: #000000;
+            text-decoration: none;
+
+        }
+        </style>
+</head>
+<body>
+<div class="navbar navbar-fixed-top navbar-inverse">
+
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/"><i class="icon-cogs icon-large" style="color: white;"></i>  <object class="logonee">TagFS</object></a>
+        <div class="nav-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/?cmd=main&">Классификатор</a></li>
+                <li><a href="/?cmd=files">Просмотр</a></li>
+            </ul>
+                <a href="#" data-reveal-id="MyModal">
+                <button class="btn btn-default pull-right" style="margin-top: 8px; background-color: #2f2f2f; color:#ffffff; border-color: #2f2f2f;"><i class="icon-plus"></i> Создать</button>
+            </a>
+
+        </div>
+
+
+</div>
+
+<div class="row" style="padding: 0px; margin-top: 50px;">
+    <ul class="breadcrumb" style="">
+        <li><a style='text-decoration: none; color: #000000;' href="/?cmd=main"><i class="icon-home"></i></a></li>
+        {% for item in path %}
+        <li><a style='text-decoration: none; color: #000000;' href="?cmd=main&id={{ item.id }}">{{ item.name }}</a></li>
+
+        {% endfor %}
+    </ul>
+        <table class="table table-hover" style="margin-top: -22px;">
+            <tbody>
+            {% for item in items %}
+            <tr>
+                <td style="width: 50px;" onClick="document.location='?cmd=main&id={{ item.id }}';"><span class="label label-inverse">TAG</span></td>
+                <td onClick="document.location='?cmd=main&id={{ item.id }}';">{{ item.name }}</td>
+                <td  style="width: 300px;" class="">
+                    <div class="pull-right">
+                        {% if item.portal %}
+                        <a class='fs_link' href="#" data-reveal-id="frame_{{ item.id }}">
+                            <i class="icon-signin"></i> Портал
+                        </a>
+                        {% endif %}
+                        <a class='fs_link' href="#" data-reveal-id="modal_{{ item.id }}">
+                            <i class="icon-wrench"></i> Редактировать
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+<div id="MyModal" class="reveal-modal">
+    <p><h4>Имя:</h4></p>
+    <form action="?id={{ id }}&cmd=new" class="navbar-form navbar-form" method="POST">
+        <input name="name" type="text" style="width: 400px;">
+        <button type="submit" class="btn btn-default pull-right" style="background-color: #2f2f2f; color:#ffffff; border-color: #2f2f2f;"><i class="icon-plus"></i> Создать</button>
+    </form>
+    <a style='text-decoration: none;' class="close-reveal-modal">&#215;</a>
+</div>
+{% for item in items %}
+<div id="modal_{{ item.id }}" class="reveal-modal">
+    <p><h4>Имя:</h4></p>
+    <form style="float: left;" action="?id={{ item.parent }}&cmd=update&tag={{ item.id }}" class="navbar-form" method="POST">
+        <input name="name" value="{{ item.name }}" type="text" style="width: 310px;">
+        <button type="submit" class="btn btn-default" style="background-color: #2f2f2f; color:#ffffff; border-color: #2f2f2f;"><i class="icon-edit"></i> Переименовать</button>
+    </form>
+    <form  style="float: right; padding-top: 8px;" action="?id={{ item.parent }}&cmd=delete"  method="POST">
+        <input name="id" type="hidden" value="{{ item.id }}" style="width: 200px;">
+        <button type="submit" class="btn btn-danger"><i class="icon-trash"></i></button>
+    </form>
+    <a style='text-decoration: none;' class="close-reveal-modal">&#215;</a>
+</div>
+<div id="frame_{{ item.id }}" class="reveal-modal" style="width: 820px;">
+    <iframe id="tag_selector_frame" style="border: none;" src="index.php?cmd=editor&f={{ item.portalfilter }}" width="800" height="600" align="center">
+
+    </iframe>
+    <a style='text-decoration: none;' class="close-reveal-modal">&#215;</a>
+</div>
+
+{% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

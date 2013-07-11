@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TagFS - Режим просмотра</title>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+        <link href="../css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="../css/bootstrap.css" rel="stylesheet" media="screen">
+        <link rel="stylesheet" href="../css/font-awesome.min.css">
+        <script src="../js/bootstrap.js"></script>
+        <link href='http://fonts.googleapis.com/css?family=Italiana' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Marmelad&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+        <style>
+            body{
+                font-family: 'Marmelad', sans-serif;
+            }
+            .logonee{
+                font-family: 'Italiana', serif;
+                color: #ffffff;
+                text-decoration-color: #ffffff;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="navbar navbar-fixed-top navbar-inverse">
+
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><i class="icon-cogs icon-large" style="color: white;"></i>  <object class="logonee">TagFS</object></a>
+            <div class="nav-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/?cmd=main">Классификатор</a></li>
+                    <li class="active"><a href="/?show=files">Просмотр</a></li>
+                </ul>
+                <form action="/?f={{ addfilter }}" class="navbar-form pull-right" method="POST">
+                    <button type="submit" class="btn btn-default" style="background-color: #2f2f2f; color:#ffffff; border-color: #2f2f2f;"><i class="icon-plus"></i> Добавить фильтр</button>
+                </form>
+            </div>
+        </div>
+        <div class="row" style="padding: 0px; margin-top: 50px;">
+            <ul class="breadcrumb">
+                {% for item in path %}
+                <li><a style='text-decoration: none; color: #000000;' href="?f={{ item.delete }}"><i class="icon-trash"></i></a> <a style='text-decoration: none; color: black;'  href="?f={{ item.filter }}">{{ item.name }}</a></li>
+                {% endfor %}
+            </ul>
+            <table class="table table-hover" style="margin-top: -22px;">
+                <tbody>
+                    {% if root_dir != 'false' %}
+                    <tr>
+                        <td  style="width: 75px;" onClick="document.location='?f={{ backfilter }}';"><span class="label label-inverse pull-right">/</span></td>
+                        <td onClick="document.location='?f={{ backfilter }}';">. .</td>
+                    </tr>
+                    {% endif %}
+                    {% for item in items %}
+                    <tr>
+                        <td  style="width: 75px;" onClick="document.location='/?show=files&f={{ item.filter }}';"><span class="label label-inverse pull-right">TAG</span></td>
+                        <td onClick="document.location='/?show=files&f={{ item.filter }}';">{{ item.name }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% for file in portal %}
+                    <tr>
+                        <td><span class="label label-info pull-right">PORTAL</span></td>
+                        <td onClick="document.location='{{ file.link }}'">{{ file.name }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% for file in files %}
+                    <tr>
+                        <td><span class="label label-success pull-right">FILE</span></td>
+                        <td onClick="document.location='{{ file.link }}'">{{ file.name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+    </body>
+</html>
