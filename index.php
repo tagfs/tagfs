@@ -84,17 +84,21 @@ switch ($cmd) {
 
         $data['items'] = $db->getFirstChildren(array($id));
         $newItems = array();
-        foreach ($data['items'] as $item) {
-            $portal = $item;
-            if (isset($item['portal'])) {
-                $portalFilter = new TagFilter($db->getRootId());
-                $portalFilter->import($item);
+        if ($data['items']) {
+            foreach ($data['items'] as $item) {
+                $portal = $item;
+                if (isset($item['portal'])) {
+                    $portalFilter = new TagFilter($db->getRootId());
+                    $portalFilter->import($item);
 
-                $portal['portalfilter'] =  $portalFilter->getURL();
+                    $portal['portalfilter'] =  $portalFilter->getURL();
+                }
+                $newItems[] = $portal;
             }
-            $newItems[] = $portal;
+            $data['items'] = $newItems;
         }
-        $data['items'] = $newItems;
+        else $data['items'] = false;
+
 
         //var_dump($data['items']);
         $_SESSION['id'] = $id;
